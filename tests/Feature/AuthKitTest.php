@@ -18,6 +18,12 @@ class AuthKitTest extends TestCase
 
         // Clear permission cache
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+        // Register test routes for middleware testing
+        \Illuminate\Support\Facades\Route::middleware(['web', 'auth', 'role:admin'])
+            ->get('/test-admin-route', function () {
+                return response()->json(['message' => 'Success']);
+            });
     }
 
     /** @test */
@@ -140,9 +146,10 @@ class AuthKitTest extends TestCase
         $adminRole = Role::create(['name' => 'admin']);
         $user->assignRole($adminRole);
 
-        // This would need a test route set up
-        // For now, we just verify the role assignment worked
-        $this->assertTrue($user->hasRole('admin'));
+        $this->actingAs($user)
+            ->get('/test-admin-route')
+            ->assertStatus(200)
+            ->assertJson(['message' => 'Success']);
     }
 
     /** @test */
