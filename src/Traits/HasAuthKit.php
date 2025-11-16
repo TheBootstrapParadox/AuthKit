@@ -5,14 +5,14 @@ namespace BSPDX\AuthKit\Traits;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-use Spatie\Passkeys\HasPasskeys;
+use Spatie\LaravelPasskeys\Models\Concerns\InteractsWithPasskeys;
 
 trait HasAuthKit
 {
     use HasApiTokens;
     use TwoFactorAuthenticatable;
     use HasRoles;
-    use HasPasskeys;
+    use InteractsWithPasskeys;
 
     /**
      * Determine if the user has enabled two-factor authentication.
