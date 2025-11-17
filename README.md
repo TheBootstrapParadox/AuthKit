@@ -4,7 +4,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/bspdx/authkit.svg?style=flat-square)](https://packagist.org/packages/bspdx/authkit)
 [![License](https://img.shields.io/packagist/l/bspdx/authkit.svg?style=flat-square)](https://packagist.org/packages/bspdx/authkit)
 
-A comprehensive, production-ready authentication package for Laravel 12+ featuring:
+A comprehensive, production-ready authentication package for Laravel 12. AuthKin combines the power of Laravel Fortify, Sanctum, Spatie Laravel Permission, and Spatie Laravel Passkeys to provide a full-featured auth system with:
 
 -   🔐 **Standard Authentication** - Powered by Laravel Fortify
 -   👥 **Role-Based Access Control (RBAC)** - Using Spatie Laravel Permission
@@ -14,8 +14,6 @@ A comprehensive, production-ready authentication package for Laravel 12+ featuri
 -   🎨 **Framework-Agnostic Blade Components** - Beautiful, customizable UI partials
 -   🌐 **API Support** - Full Sanctum integration for API authentication
 -   🏢 **Multi-Tenancy Ready** - Optional tenant scoping
--
--   This AuthKit
 
 ## Table of Contents
 
@@ -429,23 +427,7 @@ AuthKit is multi-tenancy ready. To enable:
 ],
 ```
 
-### Step 2: Add Tenant Column to Migrations
-
-Uncomment the tenant column in the published migration:
-
-```php
-// database/migrations/2024_01_01_000001_add_authkit_fields_to_users_table.php
-$table->unsignedBigInteger('tenant_id')->nullable()->after('id');
-$table->index('tenant_id');
-```
-
-### Step 3: Run Migrations
-
-```bash
-php artisan migrate
-```
-
-### Step 4: Scope Queries
+### Step 2: Scope Queries
 
 Use Spatie's multitenancy package or implement your own scoping logic.
 
@@ -493,7 +475,7 @@ All Blade components use CSS custom properties for easy theming:
 
 ## Security
 
-If you discover any security issues, please email security@bspdx.com instead of using the issue tracker.
+If you discover any security issues, please email info@bspdx.com instead of using the issue tracker.
 
 ## Credits
 
