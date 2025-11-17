@@ -6,37 +6,39 @@
 
 A comprehensive, production-ready authentication package for Laravel 12+ featuring:
 
-- 🔐 **Standard Authentication** - Powered by Laravel Fortify
-- 👥 **Role-Based Access Control (RBAC)** - Using Spatie Laravel Permission
-- 📱 **TOTP Two-Factor Authentication** - Google Authenticator, Authy, etc.
-- 🔑 **Passkey Authentication** - Modern WebAuthn/FIDO2 login
-- 🛡️ **Passkey as 2FA** - Use passkeys as a second factor
-- 🎨 **Framework-Agnostic Blade Components** - Beautiful, customizable UI partials
-- 🌐 **API Support** - Full Sanctum integration for API authentication
-- 🏢 **Multi-Tenancy Ready** - Optional tenant scoping
+-   🔐 **Standard Authentication** - Powered by Laravel Fortify
+-   👥 **Role-Based Access Control (RBAC)** - Using Spatie Laravel Permission
+-   📱 **TOTP Two-Factor Authentication** - Google Authenticator, Authy, etc.
+-   🔑 **Passkey Authentication** - Modern WebAuthn/FIDO2 login
+-   🛡️ **Passkey as 2FA** - Use passkeys as a second factor
+-   🎨 **Framework-Agnostic Blade Components** - Beautiful, customizable UI partials
+-   🌐 **API Support** - Full Sanctum integration for API authentication
+-   🏢 **Multi-Tenancy Ready** - Optional tenant scoping
+-
+-   This AuthKit
 
 ## Table of Contents
 
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-  - [User Model Setup](#user-model-setup)
-  - [Blade Components](#blade-components)
-  - [Routes](#routes)
-  - [Middleware](#middleware)
-  - [API Usage](#api-usage)
-- [HTTPS Setup](#https-setup)
-- [Multi-Tenancy](#multi-tenancy)
-- [Testing](#testing)
-- [Credits](#credits)
-- [License](#license)
+-   [Requirements](#requirements)
+-   [Installation](#installation)
+-   [Configuration](#configuration)
+-   [Usage](#usage)
+    -   [User Model Setup](#user-model-setup)
+    -   [Blade Components](#blade-components)
+    -   [Routes](#routes)
+    -   [Middleware](#middleware)
+    -   [API Usage](#api-usage)
+-   [HTTPS Setup](#https-setup)
+-   [Multi-Tenancy](#multi-tenancy)
+-   [Testing](#testing)
+-   [Credits](#credits)
+-   [License](#license)
 
 ## Requirements
 
-- PHP 8.2+
-- Laravel 12.0+
-- MySQL 5.7+ / PostgreSQL 9.6+ / SQLite 3.8.8+
+-   PHP 8.2+
+-   Laravel 12.0+
+-   MySQL 5.7+ / PostgreSQL 9.6+ / SQLite 3.8.8+
 
 ## Installation
 
@@ -72,10 +74,11 @@ php artisan migrate
 ```
 
 This will create tables for:
-- Two-factor authentication columns in `users` table
-- Roles and permissions (Spatie)
-- Passkeys (Spatie)
-- Personal access tokens (Sanctum)
+
+-   Two-factor authentication columns in `users` table
+-   Roles and permissions (Spatie)
+-   Passkeys (Spatie)
+-   Personal access tokens (Sanctum)
 
 ### Step 4: Seed Demo Data (Optional)
 
@@ -84,13 +87,14 @@ php artisan db:seed --class=AuthKitSeeder
 ```
 
 This creates:
-- 4 default roles: `super-admin`, `admin`, `editor`, `user`
-- Common permissions for each role
-- 4 demo users (all with password: `password`)
-  - `superadmin@example.com` - Super Admin
-  - `admin@example.com` - Admin
-  - `editor@example.com` - Editor
-  - `user@example.com` - Regular User
+
+-   4 default roles: `super-admin`, `admin`, `editor`, `user`
+-   Common permissions for each role
+-   4 demo users (all with password: `password`)
+    -   `superadmin@example.com` - Super Admin
+    -   `admin@example.com` - Admin
+    -   `editor@example.com` - Editor
+    -   `user@example.com` - Regular User
 
 ### Step 5: Configure Fortify
 
@@ -187,10 +191,11 @@ class User extends Authenticatable
 ```
 
 This trait combines:
-- `HasApiTokens` (Sanctum)
-- `TwoFactorAuthenticatable` (Fortify)
-- `HasRoles` (Spatie Permission)
-- `HasPasskeys` (Spatie Passkeys)
+
+-   `HasApiTokens` (Sanctum)
+-   `TwoFactorAuthenticatable` (Fortify)
+-   `HasRoles` (Spatie Permission)
+-   `HasPasskeys` (Spatie Passkeys)
 
 ### Blade Components
 
@@ -241,12 +246,14 @@ AuthKit provides framework-agnostic Blade components you can drop anywhere:
 AuthKit doesn't auto-register routes. Add them manually from the published examples:
 
 **Web Routes** (`routes/authkit-web.php`):
+
 ```php
 // Include in your routes/web.php
 require __DIR__.'/authkit-web.php';
 ```
 
 **API Routes** (`routes/authkit-api.php`):
+
 ```php
 // Include in your routes/api.php
 require __DIR__.'/authkit-api.php';
@@ -347,6 +354,7 @@ Route::post('/login', function (Request $request) {
 All API routes are protected with `auth:sanctum` middleware. Example requests:
 
 **Get All Roles:**
+
 ```bash
 curl -X GET http://localhost/api/roles \
   -H "Authorization: Bearer YOUR_TOKEN" \
@@ -354,6 +362,7 @@ curl -X GET http://localhost/api/roles \
 ```
 
 **Assign Role to User:**
+
 ```bash
 curl -X POST http://localhost/api/users/1/roles \
   -H "Authorization: Bearer YOUR_TOKEN" \
@@ -362,6 +371,7 @@ curl -X POST http://localhost/api/users/1/roles \
 ```
 
 **Enable 2FA:**
+
 ```bash
 curl -X POST http://localhost/api/user/two-factor-authentication \
   -H "Authorization: Bearer YOUR_TOKEN"
@@ -374,24 +384,27 @@ curl -X POST http://localhost/api/user/two-factor-authentication \
 Quick summary:
 
 1. Install `mkcert`:
-   ```bash
-   brew install mkcert  # macOS
-   mkcert -install
-   ```
+
+    ```bash
+    brew install mkcert  # macOS
+    mkcert -install
+    ```
 
 2. Generate certificates:
-   ```bash
-   mkdir -p docker/ssl && cd docker/ssl
-   mkcert localhost 127.0.0.1 ::1
-   mv localhost+2.pem cert.pem
-   mv localhost+2-key.pem key.pem
-   ```
+
+    ```bash
+    mkdir -p docker/ssl && cd docker/ssl
+    mkcert localhost 127.0.0.1 ::1
+    mv localhost+2.pem cert.pem
+    mv localhost+2-key.pem key.pem
+    ```
 
 3. Update `.env`:
-   ```env
-   APP_URL=https://localhost
-   SESSION_SECURE_COOKIE=true
-   ```
+
+    ```env
+    APP_URL=https://localhost
+    SESSION_SECURE_COOKIE=true
+    ```
 
 4. Configure Nginx/Caddy to use the certificates
 
@@ -484,12 +497,12 @@ If you discover any security issues, please email security@bspdx.com instead of 
 
 ## Credits
 
-- [BSPDX](https://github.com/TheBootstrapParadox)
-- Built on top of:
-  - [Laravel Fortify](https://github.com/laravel/fortify)
-  - [Laravel Sanctum](https://github.com/laravel/sanctum)
-  - [Spatie Laravel Permission](https://github.com/spatie/laravel-permission)
-  - [Spatie Laravel Passkeys](https://github.com/spatie/laravel-passkeys)
+-   [BSPDX](https://github.com/TheBootstrapParadox)
+-   Built on top of:
+    -   [Laravel Fortify](https://github.com/laravel/fortify)
+    -   [Laravel Sanctum](https://github.com/laravel/sanctum)
+    -   [Spatie Laravel Permission](https://github.com/spatie/laravel-permission)
+    -   [Spatie Laravel Passkeys](https://github.com/spatie/laravel-passkeys)
 
 ## License
 
@@ -571,6 +584,6 @@ That's it! You now have a complete authentication system with 2FA, passkeys, and
 
 ## Support
 
-- **Documentation:** [Full documentation](https://github.com/TheBootstrapParadox/AuthKit/wiki)
-- **Issues:** [GitHub Issues](https://github.com/TheBootstrapParadox/AuthKit/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/TheBootstrapParadox/AuthKit/discussions)
+-   **Documentation:** [Full documentation](https://github.com/TheBootstrapParadox/AuthKit/wiki)
+-   **Issues:** [GitHub Issues](https://github.com/TheBootstrapParadox/AuthKit/issues)
+-   **Discussions:** [GitHub Discussions](https://github.com/TheBootstrapParadox/AuthKit/discussions)
