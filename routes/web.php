@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use BSPDX\AuthKit\Http\Controllers\TwoFactorAuthController;
-use BSPDX\AuthKit\Http\Controllers\PasskeyAuthController;
+use Bspdx\AuthKit\Http\Controllers\TwoFactorAuthController;
+use Bspdx\AuthKit\Http\Controllers\PasskeyAuthController;
 
 /*
 |--------------------------------------------------------------------------

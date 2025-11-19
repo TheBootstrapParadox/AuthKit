@@ -1,6 +1,6 @@
 <?php
 
-namespace BSPDX\AuthKit\Http\Controllers;
+namespace Bspdx\AuthKit\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;

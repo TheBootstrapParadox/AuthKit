@@ -400,7 +400,7 @@
 
                 <div class="step">
                     <h3>Update User Model</h3>
-                    <div class="code-block">use BSPDX\AuthKit\Traits\HasAuthKit;
+                    <div class="code-block">use Bspdx\AuthKit\Traits\HasAuthKit;
 
                         class User extends Authenticatable
                         {

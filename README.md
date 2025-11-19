@@ -178,7 +178,7 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use BSPDX\AuthKit\Traits\HasAuthKit;
+use Bspdx\AuthKit\Traits\HasAuthKit;
 
 class User extends Authenticatable
 {
@@ -514,7 +514,7 @@ php artisan db:seed --class=AuthKitSeeder
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use BSPDX\AuthKit\Traits\HasAuthKit;
+use Bspdx\AuthKit\Traits\HasAuthKit;
 
 class User extends Authenticatable
 {

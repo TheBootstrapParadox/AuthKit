@@ -1,12 +1,12 @@
 <?php
 
-namespace BSPDX\AuthKit;
+namespace Bspdx\AuthKit;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use BSPDX\AuthKit\Http\Middleware\EnsureHasRole;
-use BSPDX\AuthKit\Http\Middleware\EnsureHasPermission;
-use BSPDX\AuthKit\Http\Middleware\EnsureTwoFactorEnabled;
+use Bspdx\AuthKit\Http\Middleware\EnsureHasRole;
+use Bspdx\AuthKit\Http\Middleware\EnsureHasPermission;
+use Bspdx\AuthKit\Http\Middleware\EnsureTwoFactorEnabled;
 
 class AuthKitServiceProvider extends ServiceProvider {
     /**
@@ -74,11 +74,11 @@ class AuthKitServiceProvider extends ServiceProvider {
 
         // Register Blade components
         $this->loadViewComponentsAs('authkit', [
-            \BSPDX\AuthKit\View\Components\LoginForm::class,
-            \BSPDX\AuthKit\View\Components\RegisterForm::class,
-            \BSPDX\AuthKit\View\Components\TwoFactorChallenge::class,
-            \BSPDX\AuthKit\View\Components\PasskeyRegister::class,
-            \BSPDX\AuthKit\View\Components\PasskeyLogin::class,
+            \Bspdx\AuthKit\View\Components\LoginForm::class,
+            \Bspdx\AuthKit\View\Components\RegisterForm::class,
+            \Bspdx\AuthKit\View\Components\TwoFactorChallenge::class,
+            \Bspdx\AuthKit\View\Components\PasskeyRegister::class,
+            \Bspdx\AuthKit\View\Components\PasskeyLogin::class,
         ]);
     }
 }
