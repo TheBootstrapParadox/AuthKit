@@ -1,6 +1,6 @@
 <?php
 
-namespace BSPDX\AuthKit\Http\Middleware;
+namespace Bspdx\AuthKit\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;

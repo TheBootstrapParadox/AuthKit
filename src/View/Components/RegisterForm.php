@@ -1,6 +1,6 @@
 <?php
 
-namespace BSPDX\AuthKit\View\Components;
+namespace Bspdx\AuthKit\View\Components;
 
 use Illuminate\View\Component;
 use Illuminate\View\View;

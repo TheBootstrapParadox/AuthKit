@@ -1,6 +1,6 @@
 <?php
 
-namespace BSPDX\AuthKit\Traits;
+namespace Bspdx\AuthKit\Traits;
 
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;

@@ -40,7 +40,7 @@
     },
     "autoload": {
         "psr-4": {
-            "BSPDX\\AuthKit\\": "src/",
+            "Bspdx\\AuthKit\\": "src/",
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
@@ -48,7 +48,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "BSPDX\\AuthKit\\Tests\\": "tests/",
+            "Bspdx\\AuthKit\\Tests\\": "tests/",
             "Tests\\": "tests/"
         }
     },
@@ -100,7 +100,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "BSPDX\\AuthKit\\AuthKitServiceProvider"
+                "Bspdx\\AuthKit\\AuthKitServiceProvider"
             ],
             "dont-discover": []
         }
