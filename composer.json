@@ -3,7 +3,17 @@
     "name": "bspdx/authkit",
     "type": "library",
     "description": "Complete authentication package for Laravel with Fortify, Passkeys, TOTP 2FA, and RBAC",
-    "keywords": ["laravel", "authentication", "fortify", "passkeys", "webauthn", "2fa", "totp", "rbac", "permissions"],
+    "keywords": [
+        "laravel",
+        "authentication",
+        "fortify",
+        "passkeys",
+        "webauthn",
+        "2fa",
+        "totp",
+        "rbac",
+        "permissions"
+    ],
     "license": "MIT",
     "authors": [
         {
@@ -58,6 +68,15 @@
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"
+        ],
+        "version": [
+            "@php -r \"echo 'Current version: '; passthru('git describe --tags --abbrev=0 2>/dev/null || echo No version tags yet');\""
+        ],
+        "version:list": [
+            "@php -r \"echo 'All version tags:' . PHP_EOL; passthru('git tag -l | sort -V');\""
+        ],
+        "version:release": [
+            "bash bin/release"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

@@ -16,6 +16,11 @@ use BSPDX\AuthKit\Http\Controllers\PasskeyAuthController;
 |
 */
 
+// Splash Page
+Route::get('/', function () {
+    return view('splash');
+})->name('home');
+
 // Two-Factor Authentication Routes
 Route::middleware(['web', 'auth'])->group(function () {
     // Enable 2FA
