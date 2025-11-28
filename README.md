@@ -49,6 +49,10 @@ composer require bspdx/authkit
 ### Step 2: Publish Configuration & Assets
 
 ```bash
+# Publish
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="migrations"
+php artisan vendor:publish --provider="Spatie\Passkey\PasskeyServiceProvider" --tag="migrations"
+
 # Publish configuration
 php artisan vendor:publish --tag=authkit-config
 
