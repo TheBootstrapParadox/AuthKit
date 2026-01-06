@@ -53,9 +53,7 @@ jobs:
         run: php artisan migrate:fresh
 
       - name: Seed database
-        run: |
-          php artisan db:seed
-          php artisan db:seed --class=AuthKitSeeder
+        run: php artisan db:seed --class=AuthKitSeeder
 
       - name: Execute tests
         run: php vendor/bin/phpunit
