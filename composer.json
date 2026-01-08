@@ -40,15 +40,15 @@
     },
     "autoload": {
         "psr-4": {
-            "BSPDX\\AuthKit\\": "src/",
-            "App\\": "app/",
-            "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "BSPDX\\AuthKit\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "BSPDX\\AuthKit\\Tests\\": "tests/",
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/",
             "Tests\\": "tests/"
         }
     },
