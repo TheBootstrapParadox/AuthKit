@@ -22,10 +22,12 @@ A comprehensive, production-ready authentication package for Laravel 12. AuthKin
 -   [Configuration](#configuration)
 -   [Usage](#usage)
     -   [User Model Setup](#user-model-setup)
+    -   [Service Layer](#service-layer-new-in-v030)
     -   [Blade Components](#blade-components)
     -   [Routes](#routes)
     -   [Middleware](#middleware)
     -   [API Usage](#api-usage)
+-   [Architecture](#architecture)
 -   [HTTPS Setup](#https-setup)
 -   [Multi-Tenancy](#multi-tenancy)
 -   [Testing](#testing)
@@ -195,6 +197,52 @@ This trait combines:
 -   `HasRoles` (Spatie Permission)
 -   `HasPasskeys` (Spatie Passkeys)
 
+### Service Layer (NEW in v0.3.0)
+
+AuthKit v0.3.0 introduces a clean service layer architecture to interact with roles, permissions, and passkeys. All external dependencies are now abstracted behind AuthKit services.
+
+#### Using Services in Controllers
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use BSPDX\AuthKit\Services\Contracts\RoleServiceInterface;
+use BSPDX\AuthKit\Services\Contracts\PermissionServiceInterface;
+use BSPDX\AuthKit\Services\Contracts\AuthorizationServiceInterface;
+use BSPDX\AuthKit\Services\Contracts\PasskeyServiceInterface;
+
+class AdminController extends Controller
+{
+    public function __construct(
+        private RoleServiceInterface $roleService,
+        private PermissionServiceInterface $permissionService,
+        private AuthorizationServiceInterface $authService
+    ) {}
+
+    public function assignRole(User $user)
+    {
+        // Get all roles
+        $roles = $this->roleService->getAllWithPermissions();
+
+        // Assign roles to user
+        $this->authService->assignRolesToUser($user, ['admin', 'editor']);
+
+        // Check if user has role
+        if ($this->authService->userHasRole($user, 'admin')) {
+            // User is admin
+        }
+    }
+}
+```
+
+**Benefits:**
+- Clean dependency injection
+- Easy to mock for testing
+- No direct external package dependencies in your code
+- Future-proof architecture
+
 ### Blade Components
 
 AuthKit provides framework-agnostic Blade components you can drop anywhere:
@@ -297,6 +345,8 @@ Route::middleware(['auth', '2fa'])->group(function () {
 
 ### Checking Permissions in Code
 
+#### Traditional Approach (User Model Methods)
+
 ```php
 // Check role
 if (auth()->user()->hasRole('admin')) {
@@ -316,6 +366,26 @@ if (auth()->user()->hasAnyRole(['admin', 'editor'])) {
 // Super admin check
 if (auth()->user()->isSuperAdmin()) {
     // User is super admin (bypasses all permission checks)
+}
+```
+
+#### Service Layer Approach (Recommended for Controllers)
+
+```php
+use BSPDX\AuthKit\Services\Contracts\AuthorizationServiceInterface;
+
+class PostController extends Controller
+{
+    public function __construct(
+        private AuthorizationServiceInterface $authService
+    ) {}
+
+    public function edit(Post $post)
+    {
+        if ($this->authService->userHasPermission(auth()->user(), 'edit-posts')) {
+            // User can edit posts
+        }
+    }
 }
 ```
 
@@ -374,6 +444,46 @@ curl -X POST http://localhost/api/users/1/roles \
 curl -X POST http://localhost/api/user/two-factor-authentication \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
+
+## Architecture
+
+AuthKit v0.3.0+ uses a clean service layer architecture to isolate external dependencies.
+
+### Service Layer
+
+All role, permission, and passkey operations go through dedicated services:
+
+- **PasskeyService** - Manages WebAuthn/passkey operations
+  - `registerOptions()`, `register()`, `authenticationOptions()`, `authenticate()`
+- **RoleService** - Role CRUD and queries
+  - `getAllWithPermissions()`, `create()`, `delete()`, `syncPermissions()`
+- **PermissionService** - Permission CRUD and queries
+  - `getAllWithRoles()`, `create()`, `delete()`, `syncToUser()`
+- **AuthorizationService** - High-level authorization operations
+  - `assignRolesToUser()`, `assignPermissionsToUser()`, `userHasRole()`, `userHasPermission()`
+
+All services are registered in Laravel's service container with interface bindings and convenient aliases:
+- `authkit.passkey`
+- `authkit.roles`
+- `authkit.permissions`
+- `authkit.authorization`
+
+### Models
+
+AuthKit provides its own model classes that extend Spatie's models:
+
+- `BSPDX\AuthKit\Models\AuthKitRole` - Extends Spatie's Role model
+  - Adds `isSuperAdmin()` method
+- `BSPDX\AuthKit\Models\AuthKitPermission` - Extends Spatie's Permission model
+
+All type hints use these AuthKit models, providing a consistent `BSPDX\AuthKit` namespace throughout your application.
+
+### Benefits
+
+- **Testability** - Mock service interfaces in tests instead of facades
+- **Maintainability** - All external dependencies isolated in service layer
+- **Flexibility** - Easy to swap implementations or add caching/logging
+- **Clean API** - No third-party classes in your controllers
 
 ## HTTPS Setup
 
@@ -480,11 +590,13 @@ If you discover any security issues, please email info@bspdx.com instead of usin
 ## Credits
 
 -   [BSPDX](https://github.com/TheBootstrapParadox)
--   Built on top of:
+-   Built with:
     -   [Laravel Fortify](https://github.com/laravel/fortify)
     -   [Laravel Sanctum](https://github.com/laravel/sanctum)
-    -   [Spatie Laravel Permission](https://github.com/spatie/laravel-permission)
-    -   [Spatie Laravel Passkeys](https://github.com/spatie/laravel-passkeys)
+    -   [Spatie Laravel Permission](https://github.com/spatie/laravel-permission) *(abstracted)*
+    -   [Spatie Laravel Passkeys](https://github.com/spatie/laravel-passkeys) *(abstracted)*
+
+**Note:** Starting with v0.3.0, all Spatie dependencies are abstracted through AuthKit's service layer, providing a clean `BSPDX\AuthKit` namespace throughout your application.
 
 ## License
 

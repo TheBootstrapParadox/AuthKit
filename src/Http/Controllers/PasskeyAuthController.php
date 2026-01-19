@@ -6,10 +6,17 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
-use Spatie\Passkeys\Facades\Passkey;
+use BSPDX\AuthKit\Services\Contracts\PasskeyServiceInterface;
 
 class PasskeyAuthController
 {
+    /**
+     * Create a new controller instance.
+     */
+    public function __construct(
+        private PasskeyServiceInterface $passkeyService
+    ) {}
+
     /**
      * Display the passkey registration view.
      */
@@ -26,7 +33,7 @@ class PasskeyAuthController
      */
     public function registerOptions(Request $request): JsonResponse
     {
-        $options = Passkey::registerOptions($request->user());
+        $options = $this->passkeyService->registerOptions($request->user());
 
         return response()->json($options);
     }
@@ -42,7 +49,7 @@ class PasskeyAuthController
         ]);
 
         try {
-            Passkey::register($request->user(), $validated['credential'], $validated['name']);
+            $this->passkeyService->register($request->user(), $validated['credential'], $validated['name']);
 
             if ($request->wantsJson()) {
                 return response()->json([
@@ -94,7 +101,7 @@ class PasskeyAuthController
      */
     public function loginOptions(Request $request): JsonResponse
     {
-        $options = Passkey::authenticationOptions();
+        $options = $this->passkeyService->authenticationOptions();
 
         return response()->json($options);
     }
@@ -109,7 +116,7 @@ class PasskeyAuthController
         ]);
 
         try {
-            $user = Passkey::authenticate($validated['credential']);
+            $user = $this->passkeyService->authenticate($validated['credential']);
 
             auth()->login($user, remember: true);
 

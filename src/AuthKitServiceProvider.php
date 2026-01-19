@@ -17,6 +17,48 @@ class AuthKitServiceProvider extends ServiceProvider {
             __DIR__ . '/../config/authkit.php',
             'authkit'
         );
+
+        // Register service interfaces
+        $this->app->singleton(
+            \BSPDX\AuthKit\Services\Contracts\PasskeyServiceInterface::class,
+            \BSPDX\AuthKit\Services\PasskeyService::class
+        );
+
+        $this->app->singleton(
+            \BSPDX\AuthKit\Services\Contracts\RoleServiceInterface::class,
+            \BSPDX\AuthKit\Services\RoleService::class
+        );
+
+        $this->app->singleton(
+            \BSPDX\AuthKit\Services\Contracts\PermissionServiceInterface::class,
+            \BSPDX\AuthKit\Services\PermissionService::class
+        );
+
+        $this->app->singleton(
+            \BSPDX\AuthKit\Services\Contracts\AuthorizationServiceInterface::class,
+            \BSPDX\AuthKit\Services\AuthorizationService::class
+        );
+
+        // Register convenient aliases
+        $this->app->alias(
+            \BSPDX\AuthKit\Services\Contracts\PasskeyServiceInterface::class,
+            'authkit.passkey'
+        );
+
+        $this->app->alias(
+            \BSPDX\AuthKit\Services\Contracts\RoleServiceInterface::class,
+            'authkit.roles'
+        );
+
+        $this->app->alias(
+            \BSPDX\AuthKit\Services\Contracts\PermissionServiceInterface::class,
+            'authkit.permissions'
+        );
+
+        $this->app->alias(
+            \BSPDX\AuthKit\Services\Contracts\AuthorizationServiceInterface::class,
+            'authkit.authorization'
+        );
     }
 
     /**

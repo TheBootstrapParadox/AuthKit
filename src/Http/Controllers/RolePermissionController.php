@@ -4,18 +4,29 @@ namespace BSPDX\AuthKit\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use BSPDX\AuthKit\Models\AuthKitRole;
+use BSPDX\AuthKit\Models\AuthKitPermission;
+use BSPDX\AuthKit\Services\Contracts\RoleServiceInterface;
+use BSPDX\AuthKit\Services\Contracts\PermissionServiceInterface;
+use BSPDX\AuthKit\Services\Contracts\AuthorizationServiceInterface;
 use App\Models\User;
 
 class RolePermissionController
 {
     /**
+     * Create a new controller instance.
+     */
+    public function __construct(
+        private RoleServiceInterface $roleService,
+        private PermissionServiceInterface $permissionService,
+        private AuthorizationServiceInterface $authorizationService
+    ) {}
+    /**
      * Get all roles.
      */
     public function roles(): JsonResponse
     {
-        $roles = Role::with('permissions')->get()->map(function ($role) {
+        $roles = $this->roleService->getAllWithPermissions()->map(function ($role) {
             return [
                 'id' => $role->id,
                 'name' => $role->name,
@@ -34,7 +45,7 @@ class RolePermissionController
      */
     public function permissions(): JsonResponse
     {
-        $permissions = Permission::with('roles')->get()->map(function ($permission) {
+        $permissions = $this->permissionService->getAllWithRoles()->map(function ($permission) {
             return [
                 'id' => $permission->id,
                 'name' => $permission->name,
@@ -59,13 +70,13 @@ class RolePermissionController
             'permissions.*' => ['string', 'exists:permissions,name'],
         ]);
 
-        $role = Role::create([
-            'name' => $validated['name'],
-            'guard_name' => $validated['guard_name'] ?? 'web',
-        ]);
+        $role = $this->roleService->create(
+            $validated['name'],
+            $validated['guard_name'] ?? 'web'
+        );
 
         if (isset($validated['permissions'])) {
-            $role->syncPermissions($validated['permissions']);
+            $role = $this->roleService->syncPermissions($role, $validated['permissions']);
         }
 
         return response()->json([
@@ -84,10 +95,10 @@ class RolePermissionController
             'guard_name' => ['nullable', 'string'],
         ]);
 
-        $permission = Permission::create([
-            'name' => $validated['name'],
-            'guard_name' => $validated['guard_name'] ?? 'web',
-        ]);
+        $permission = $this->permissionService->create(
+            $validated['name'],
+            $validated['guard_name'] ?? 'web'
+        );
 
         return response()->json([
             'message' => 'Permission created successfully.',
@@ -105,7 +116,7 @@ class RolePermissionController
             'roles.*' => ['string', 'exists:roles,name'],
         ]);
 
-        $user->syncRoles($validated['roles']);
+        $this->authorizationService->assignRolesToUser($user, $validated['roles']);
 
         return response()->json([
             'message' => 'Roles assigned successfully.',
@@ -127,14 +138,14 @@ class RolePermissionController
             'permissions.*' => ['string', 'exists:permissions,name'],
         ]);
 
-        $user->syncPermissions($validated['permissions']);
+        $this->authorizationService->assignPermissionsToUser($user, $validated['permissions']);
 
         return response()->json([
             'message' => 'Permissions assigned successfully.',
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
-                'permissions' => $user->getAllPermissions()->pluck('name'),
+                'permissions' => $this->permissionService->getAllUserPermissions($user)->pluck('name'),
             ],
         ]);
     }
@@ -142,18 +153,18 @@ class RolePermissionController
     /**
      * Assign permissions to a role.
      */
-    public function assignPermissionsToRole(Request $request, Role $role): JsonResponse
+    public function assignPermissionsToRole(Request $request, AuthKitRole $role): JsonResponse
     {
         $validated = $request->validate([
             'permissions' => ['required', 'array'],
             'permissions.*' => ['string', 'exists:permissions,name'],
         ]);
 
-        $role->syncPermissions($validated['permissions']);
+        $role = $this->roleService->syncPermissions($role, $validated['permissions']);
 
         return response()->json([
             'message' => 'Permissions assigned to role successfully.',
-            'role' => $role->load('permissions'),
+            'role' => $role,
         ]);
     }
 
@@ -171,11 +182,11 @@ class RolePermissionController
                     'id' => $role->id,
                     'name' => $role->name,
                 ]),
-                'permissions' => $user->getAllPermissions()->map(fn($permission) => [
+                'permissions' => $this->permissionService->getAllUserPermissions($user)->map(fn($permission) => [
                     'id' => $permission->id,
                     'name' => $permission->name,
                 ]),
-                'direct_permissions' => $user->permissions->pluck('name'),
+                'direct_permissions' => $this->permissionService->getUserPermissions($user)->pluck('name'),
             ],
         ]);
     }
@@ -183,29 +194,27 @@ class RolePermissionController
     /**
      * Remove a role.
      */
-    public function deleteRole(Role $role): JsonResponse
+    public function deleteRole(AuthKitRole $role): JsonResponse
     {
-        $superAdminRole = config('authkit.rbac.super_admin_role', 'super-admin');
+        try {
+            $this->roleService->delete($role);
 
-        if ($role->name === $superAdminRole) {
             return response()->json([
-                'message' => 'Cannot delete the super admin role.',
+                'message' => 'Role deleted successfully.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
             ], 403);
         }
-
-        $role->delete();
-
-        return response()->json([
-            'message' => 'Role deleted successfully.',
-        ]);
     }
 
     /**
      * Remove a permission.
      */
-    public function deletePermission(Permission $permission): JsonResponse
+    public function deletePermission(AuthKitPermission $permission): JsonResponse
     {
-        $permission->delete();
+        $this->permissionService->delete($permission);
 
         return response()->json([
             'message' => 'Permission deleted successfully.',
