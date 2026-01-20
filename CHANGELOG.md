@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+#### Removed
+
+- Removed `0001_01_01_00000_create_users_table.php` migration (conflicts with existing Laravel apps)
+- Removed `0001_01_01_00001_create_cache_table.php` migration (host app responsibility)
+- Removed `0001_01_01_00002_create_jobs_table.php` migration (host app responsibility)
+
+---
+
 ## [0.3.2] - 2026-01-20
 
 #### Added
