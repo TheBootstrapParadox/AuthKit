@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.2] - 2026-01-20
+
+#### Added
+
+- New `BSPDX\AuthKit\Support\PasskeyConfig` class that wraps Spatie's passkey configuration
+  - Provides `getAuthenticatableModel()`, `getPasskeyModel()`, `getRelyingPartyName()`, `getRelyingPartyId()`, `getRelyingPartyIcon()`, and `getRedirectAfterLogin()` methods
+  - Migrations now use `PasskeyConfig` instead of Spatie's Config directly
+
+---
+
 ## [0.3.1] - 2026-01-20
 
 #### Added
