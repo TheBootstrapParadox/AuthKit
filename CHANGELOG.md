@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.1] - 2026-01-20
+
+#### Added
+
+- New `BSPDX\AuthKit\Contracts\HasPasskeys` interface that extends Spatie's `HasPasskeys`
+  - Allows users to import the passkey interface from AuthKit instead of directly from Spatie
+  - Provides abstraction layer for passkey authentication contracts
+
+#### Usage
+
+```php
+use BSPDX\AuthKit\Contracts\HasPasskeys;
+
+class User extends Authenticatable implements HasPasskeys
+{
+    use HasAuthKit;
+    // ...
+}
+```
+
+---
+
 ## [0.3.0] - 2026-01-19
 
 #### Added

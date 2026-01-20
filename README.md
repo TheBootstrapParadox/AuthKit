@@ -51,11 +51,8 @@ composer require bspdx/authkit
 ### Step 2: Publish Configuration & Assets
 
 ```bash
-# Publish configuration
-php artisan vendor:publish --tag=authkit-config
-
-# Publish migrations
-php artisan vendor:publish --tag=authkit-migrations
+# Publish the essentials: configuration and migrations
+php artisan vendor:publish --tag=authkit-config --tag=authkit-migrations
 
 # Publish Blade views (optional - only if you want to customize)
 php artisan vendor:publish --tag=authkit-views
@@ -243,9 +240,11 @@ class AdminController extends Controller
 - No direct external package dependencies in your code
 - Future-proof architecture
 
-### Blade Components
+### Blade Components (Optional)
 
-AuthKit provides framework-agnostic Blade components you can drop anywhere:
+AuthKit provides **optional** pre-built Blade components for Laravel projects. If you're using React, Vue, or another frontend framework, you can skip this section and use the JSON API endpoints instead.
+
+**For Laravel Blade users:**
 
 #### Login Form
 
