@@ -7,6 +7,19 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>BSPDX AuthKit - Complete Laravel Authentication</title>
     <style>
+        :root {
+            --primary: #1f43aa;
+            --accent: #cdb334;
+            --secondary: #aa1f1f;
+            --surface: #050615;
+            --surface-soft: #0b1128;
+            --panel: #f8fafc;
+            --panel-soft: #f3f5ff;
+            --text-primary: #0f172a;
+            --text-muted: #94a3b8;
+            --border: #1f2b57;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,155 +27,195 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Inter', 'Poppins', system-ui, -apple-system, sans-serif;
+            background-color: var(--surface);
+            color: var(--panel);
             line-height: 1.6;
-            color: #1f2937;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 2.5rem 1.5rem 3rem;
         }
 
         .hero {
-            background: white;
-            border-radius: 1rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            background: var(--surface-soft);
+            border-radius: 1.5rem;
             padding: 3rem;
-            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            /* box-shadow: 0 30px 60px rgba(5, 6, 21, 0.65); */
         }
 
         .logo {
             display: flex;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.75rem;
         }
 
         .logo-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 12px;
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            background: var(--accent);
+            color: var(--surface);
+            font-weight: 700;
+            font-size: 1.35rem;
+            /* letter-spacing: 0.25em; */
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            color: white;
         }
 
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #111827;
+            font-size: 2.8rem;
+            color: #f8fafc;
+            margin-bottom: 0.35rem;
         }
 
         .subtitle {
-            font-size: 1.25rem;
-            color: #6b7280;
+            font-size: 1.125rem;
+            color: var(--text-muted);
+        }
+
+        .hero-copy {
+            font-size: 1.125rem;
             margin-bottom: 2rem;
+            color: #e2e6ff;
+            line-height: 1.75;
         }
 
         .badges {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.75rem;
             flex-wrap: wrap;
-            margin-bottom: 2rem;
+            margin-bottom: 1.75rem;
         }
 
         .badge {
-            background: #f3f4f6;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            color: #4b5563;
+            padding: 0.45rem 1rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            background: var(--primary);
+            border: 1px solid var(--primary);
+            color: var(--panel);
+            /* box-shadow: 0 12px 30px rgba(5, 6, 21, 0.45); */
         }
 
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1.25rem;
             margin-bottom: 2rem;
         }
 
         .feature {
-            background: #f9fafb;
+            background: #0a1121;
+            border-radius: 1rem;
             padding: 1.5rem;
-            border-radius: 0.75rem;
-            border: 2px solid #e5e7eb;
-            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .feature:hover {
-            border-color: #667eea;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-            transform: translateY(-2px);
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+            /* box-shadow: 0 20px 40px rgba(5, 6, 21, 0.55); */
         }
 
         .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            margin-bottom: 0.65rem;
         }
 
         .feature h3 {
-            color: #111827;
-            margin-bottom: 0.5rem;
-            font-size: 1.125rem;
+            color: #f8fafc;
+            margin-bottom: 0.45rem;
+            font-size: 1.15rem;
         }
 
         .feature p {
-            color: #6b7280;
+            color: var(--text-muted);
             font-size: 0.95rem;
+            margin: 0;
         }
 
         .section {
-            background: white;
-            border-radius: 1rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            padding: 2.5rem;
-            margin-bottom: 2rem;
+            background: var(--panel);
+            border-radius: 1.3rem;
+            padding: 2.25rem;
+            margin-bottom: 1.75rem;
+            border: 1px solid rgba(15, 23, 42, 0.1);
+            /* box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18); */
         }
 
-        h2 {
-            font-size: 1.875rem;
-            margin-bottom: 1.5rem;
-            color: #111827;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 0.5rem;
+        .section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            border-bottom: 4px solid var(--primary);
+            padding-bottom: 0.55rem;
+            width: fit-content;
+        }
+
+        .section h3 {
+            font-size: 1.25rem;
+            margin: 1.4rem 0 0.75rem;
+            color: #1f2937;
+        }
+
+        .section p {
+            color: #475569;
+            line-height: 1.7;
+        }
+
+        .section-description {
+            margin-bottom: 1rem;
         }
 
         .requirements {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.6rem;
         }
 
         .requirement {
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            font-weight: 600;
+            color: #1f2937;
         }
 
         .requirement::before {
-            content: "✓";
-            color: #10b981;
-            font-weight: bold;
-            font-size: 1.25rem;
+            content: '•';
+            color: var(--accent);
+            font-size: 1.1rem;
+            line-height: 1;
         }
 
         .code-block {
-            background: #1f2937;
-            color: #f9fafb;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            overflow-x: auto;
-            margin: 1rem 0;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 0.875rem;
-            line-height: 1.5;
+            background: #0d1227;
+            color: #f8fafc;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
         }
 
         .installation-steps {
@@ -171,7 +224,7 @@
 
         .step {
             margin-bottom: 2rem;
-            padding-left: 3rem;
+            padding-left: 3.2rem;
             position: relative;
         }
 
@@ -181,36 +234,27 @@
             position: absolute;
             left: 0;
             top: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
             width: 2rem;
             height: 2rem;
-            border-radius: 50%;
+            border-radius: 0.45rem;
+            background: var(--primary);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-weight: 700;
+            /* box-shadow: 0 12px 20px rgba(15, 23, 42, 0.5); */
         }
 
         .step h3 {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
             color: #111827;
         }
 
-        .cta {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 0.5rem;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        .note {
+            color: #475569;
+            margin-top: 0.5rem;
+            line-height: 1.6;
         }
 
         .links {
@@ -220,46 +264,60 @@
             margin-top: 1.5rem;
         }
 
-        .link {
-            color: #667eea;
+        .cta {
+            background: var(--primary);
+            color: #fff;
+            padding: 0.95rem 1.8rem;
+            border-radius: 0.7rem;
             text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .cta:hover {
+            transform: translateY(-2px);
+            /* box-shadow: 0 15px 35px rgba(31, 67, 170, 0.35); */
+        }
+
+        .link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
         }
 
         .link:hover {
-            color: #764ba2;
-            text-decoration: underline;
-        }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            color: white;
-            font-size: 0.875rem;
+            color: var(--accent);
         }
 
         .demo-users {
-            background: #fef3c7;
-            border: 2px solid #fbbf24;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            margin: 1rem 0;
+            background: rgba(205, 179, 52, 0.12);
+            border: 1px solid rgba(205, 179, 52, 0.8);
+            border-left-width: 4px;
+            border-radius: 0.9rem;
+            padding: 1rem 1.25rem;
+            margin-top: 1rem;
         }
 
         .demo-users h4 {
-            color: #92400e;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
+            font-size: 1rem;
+            font-weight: 700;
         }
 
         .demo-users ul {
             list-style: none;
             padding-left: 0;
+            margin: 0;
         }
 
         .demo-users li {
-            color: #78350f;
-            padding: 0.25rem 0;
+            color: #1f2937;
+            padding: 0.2rem 0;
         }
 
         .demo-users code {
@@ -271,7 +329,7 @@
 
         .demo-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
         }
 
@@ -280,7 +338,7 @@
             border: 1px solid #e5e7eb;
             border-radius: 0.75rem;
             padding: 1.5rem;
-            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.1);
+            /* box-shadow: 0 12px 24px rgba(15, 23, 42, 0.1); */
             display: flex;
             flex-direction: column;
             gap: 1rem;
@@ -312,7 +370,7 @@
         <!-- Hero Section -->
         <div class="hero">
             <div class="logo">
-                <div class="logo-icon">🔐</div>
+                {{-- <div class="logo-icon">AK</div> --}}
                 <div>
                     <h1>BSPDX AuthKit</h1>
                     <p class="subtitle">Complete Authentication Package for Laravel 12</p>
@@ -326,40 +384,39 @@
                 <span class="badge">Production Ready</span>
             </div>
 
-            <p style="font-size: 1.125rem; margin-bottom: 2rem;">
-                A comprehensive, production-ready authentication package combining the power of Laravel Fortify,
-                Sanctum,
-                Spatie Laravel Permission, and Spatie Laravel Passkeys to provide a full-featured auth system.
-            </p>
+                <p class="hero-copy">
+                    A comprehensive, production-ready authentication package combining Laravel Fortify, Sanctum, Spatie
+                    Laravel Permission, and Spatie Laravel Passkeys to deliver a full-featured auth system.
+                </p>
 
             <div class="features">
                 <div class="feature">
-                    <div class="feature-icon">🔐</div>
+                    <div class="feature-icon">AUTH</div>
                     <h3>Standard Authentication</h3>
                     <p>Powered by Laravel Fortify with email verification and password resets</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">👥</div>
+                    <div class="feature-icon">RBAC</div>
                     <h3>RBAC System</h3>
                     <p>Complete Role-Based Access Control using Spatie Laravel Permission</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">📱</div>
+                    <div class="feature-icon">TOTP</div>
                     <h3>TOTP 2FA</h3>
                     <p>Two-Factor Authentication with Google Authenticator, Authy, etc.</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">🔑</div>
+                    <div class="feature-icon">PASS</div>
                     <h3>Passkey Authentication</h3>
                     <p>Modern WebAuthn/FIDO2 login for passwordless authentication</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">🛡️</div>
+                    <div class="feature-icon">2FA</div>
                     <h3>Passkey as 2FA</h3>
                     <p>Use passkeys as a second factor for enhanced security</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">🌐</div>
+                    <div class="feature-icon">API</div>
                     <h3>API Support</h3>
                     <p>Full Sanctum integration for API authentication</p>
                 </div>
@@ -413,7 +470,7 @@
                 <div class="step">
                     <h3>Run Migrations</h3>
                     <div class="code-block">php artisan migrate</div>
-                    <p style="margin-top: 0.5rem; color: #6b7280;">
+                    <p class="note">
                         Creates tables for two-factor authentication, roles, permissions, passkeys, and personal access
                         tokens.
                     </p>
@@ -424,14 +481,14 @@
                     <div class="code-block">php artisan db:seed --class=AuthKitSeeder</div>
 
                     <div class="demo-users">
-                        <h4>🎉 Demo Users Created</h4>
+                        <h4>Demo Users Seeded</h4>
                         <ul>
                             <li><code>superadmin@example.com</code> - Super Admin</li>
                             <li><code>admin@example.com</code> - Admin</li>
                             <li><code>editor@example.com</code> - Editor</li>
                             <li><code>user@example.com</code> - Regular User</li>
                         </ul>
-                        <p style="margin-top: 0.5rem;"><strong>All passwords:</strong> <code>password</code></p>
+                        <p class="demo-note"><strong>All passwords:</strong> <code>password</code></p>
                     </div>
                 </div>
 
@@ -452,12 +509,11 @@
         <!-- Configuration -->
         <div class="section">
             <h2>Configuration</h2>
-            <p style="margin-bottom: 1rem;">
-                The package configuration is located at <code
-                    style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">config/authkit.php</code>
+            <p class="section-description">
+                The package configuration is located at <code class="inline-code">config/authkit.php</code>.
             </p>
 
-            <h3 style="font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: #374151;">Enable/Disable Features</h3>
+            <h3>Enable/Disable Features</h3>
             <div class="code-block">'features' => [
                 'registration' => true,
                 'email_verification' => true,
@@ -467,13 +523,13 @@
                 'api_tokens' => true,
                 ]</div>
 
-            <h3 style="font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: #374151;">RBAC Settings</h3>
+            <h3>RBAC Settings</h3>
             <div class="code-block">'rbac' => [
                 'default_role' => 'user',
                 'super_admin_role' => 'super-admin',
                 ]</div>
 
-            <h3 style="font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: #374151;">Passkey Settings</h3>
+            <h3>Passkey Settings</h3>
             <div class="code-block">'passkey' => [
                 'rp_name' => env('APP_NAME', 'Laravel'),
                 'rp_id' => env('PASSKEY_RP_ID', 'localhost'),
@@ -484,9 +540,9 @@
         <!-- Middleware -->
         <div class="section">
             <h2>Middleware</h2>
-            <p style="margin-bottom: 1rem;">AuthKit provides three powerful middleware aliases:</p>
+            <p class="section-description">AuthKit provides three powerful middleware aliases:</p>
 
-            <h3 style="font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: #374151;">Role Middleware</h3>
+            <h3>Role Middleware</h3>
             <div class="code-block">// Single role
                 Route::middleware(['auth', 'role:admin'])->group(function () {
                 // Only admins
@@ -497,12 +553,12 @@
                 // Admins OR editors
                 });</div>
 
-            <h3 style="font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: #374151;">Permission Middleware</h3>
+            <h3>Permission Middleware</h3>
             <div class="code-block">Route::middleware(['auth', 'permission:edit-posts'])->group(function () {
                 // Only users with 'edit-posts' permission
                 });</div>
 
-            <h3 style="font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: #374151;">2FA Enforcement Middleware</h3>
+            <h3>2FA Enforcement Middleware</h3>
             <div class="code-block">Route::middleware(['auth', '2fa'])->group(function () {
                 // Ensures users have 2FA enabled if required for their role
                 });</div>
@@ -511,7 +567,7 @@
         <!-- Blade Components -->
         <div class="section">
             <h2>Blade Components</h2>
-            <p style="margin-bottom: 1rem;">Drop-in, framework-agnostic Blade components:</p>
+            <p class="section-description">Drop-in, framework-agnostic Blade components:</p>
 
                 <h3 style="font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: #374151;">Login Form</h3>
                 <div class="code-block">&lt;x-authkit-login-form
@@ -540,6 +596,37 @@
             <p style="margin-bottom: 1rem;">Interact with the same Blade components right here—seed the demo data, log
                 in, or
                 keep clicking to explore.</p>
+            @php
+                $demoUser = (object) [
+                    'name' => 'Demo User',
+                    'email' => 'demo@example.com',
+                    'email_verified_at' => now(),
+                    'require_password' => true,
+                    'allow_passkey_login' => true,
+                    'allow_totp_login' => true,
+                ];
+
+                $demoRoles = ['super-admin', 'editor'];
+                $demoPermissions = ['manage users', 'publish posts', 'view analytics'];
+
+                $demoPasskeys = collect([
+                    (object) [
+                        'id' => 1,
+                        'name' => 'MacBook Pro',
+                        'created_at' => now()->subDays(5),
+                        'last_used_at' => now()->subDay(),
+                    ],
+                    (object) [
+                        'id' => 2,
+                        'name' => 'YubiKey 5C',
+                        'created_at' => now()->subDays(14),
+                        'last_used_at' => null,
+                    ],
+                ]);
+
+                $demoHasTwoFactor = true;
+                $demoHasPasskeys = true;
+            @endphp
             <div class="demo-grid">
                 <div class="demo-card">
                     <h3>Login Form</h3>
@@ -572,12 +659,40 @@
                     </div>
                 </div>
             </div>
+
+            <h3 style="margin: 2rem 0 1rem; color: #111827;">Profile Components</h3>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3>Account Info</h3>
+                    <p class="demo-note">Displays a user’s basic profile fields.</p>
+                    @include('authkit::components.profile.account-info', ['user' => $demoUser])
+                </div>
+                <div class="demo-card">
+                    <h3>Roles & Permissions</h3>
+                    <p class="demo-note">Renders assigned roles and permissions as badges.</p>
+                    @include('authkit::components.profile.roles-permissions', ['roles' => $demoRoles, 'permissions' => $demoPermissions])
+                </div>
+                <div class="demo-card">
+                    <h3>Login Preferences</h3>
+                    <p class="demo-note">Toggle password, passkey, or authenticator-based login.</p>
+                    @include('authkit::components.profile.auth-preferences', [
+                        'user' => $demoUser,
+                        'hasTwoFactor' => $demoHasTwoFactor,
+                        'hasPasskeys' => $demoHasPasskeys,
+                    ])
+                </div>
+                <div class="demo-card">
+                    <h3>Passkey Management</h3>
+                    <p class="demo-note">Shows registered passkeys with delete and add flows.</p>
+                    @include('authkit::components.profile.passkey-management', ['passkeys' => $demoPasskeys])
+                </div>
+            </div>
         </div>
 
         <!-- Quick Start -->
         <div class="section">
             <h2>Quick Start</h2>
-            <p style="margin-bottom: 1rem; font-size: 1.125rem;">Get up and running in 5 minutes:</p>
+            <p class="section-description">Get up and running in 5 minutes:</p>
 
             <div class="code-block"># 1. Install package
                 composer require bspdx/authkit
@@ -592,9 +707,8 @@
                 # 3. Visit https://localhost/login
                 # Use: admin@example.com / password</div>
 
-            <p
-                style="margin-top: 1.5rem; padding: 1rem; background: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 0.25rem;">
-                <strong>💡 Pro Tip:</strong> Passkeys require HTTPS! Check out our
+            <p class="panel-note">
+                <strong>Pro Tip:</strong> Passkeys require HTTPS! Check out our
                 <a href="https://github.com/TheBootstrapParadox/AuthKit/blob/main/docs/https-setup.md" class="link"
                     target="_blank">HTTPS Setup Guide</a>
                 for local development.
@@ -604,24 +718,24 @@
         <!-- Support -->
         <div class="section">
             <h2>Support & Resources</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-                <div>
-                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem; color: #111827;">📚 Documentation</h3>
+            <div class="support-grid">
+                <div class="support-card">
+                    <h3>Documentation</h3>
                     <a href="https://github.com/TheBootstrapParadox/AuthKit/wiki" class="link" target="_blank">Full
                         Documentation →</a>
                 </div>
-                <div>
-                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem; color: #111827;">🐛 Issues</h3>
+                <div class="support-card">
+                    <h3>Issues</h3>
                     <a href="https://github.com/TheBootstrapParadox/AuthKit/issues" class="link" target="_blank">Report
                         a Bug →</a>
                 </div>
-                <div>
-                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem; color: #111827;">💬 Discussions</h3>
+                <div class="support-card">
+                    <h3>Discussions</h3>
                     <a href="https://github.com/TheBootstrapParadox/AuthKit/discussions" class="link"
                         target="_blank">Join the Community →</a>
                 </div>
-                <div>
-                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem; color: #111827;">🔒 Security</h3>
+                <div class="support-card">
+                    <h3>Security</h3>
                     <a href="mailto:info@bspdx.com" class="link">info@bspdx.com</a>
                 </div>
             </div>
@@ -630,23 +744,23 @@
         <!-- Credits -->
         <div class="section">
             <h2>Built With</h2>
-            <p style="margin-bottom: 1rem;">AuthKit stands on the shoulders of giants:</p>
-            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
-                <a href="https://github.com/laravel/fortify" class="badge" target="_blank"
-                    style="text-decoration: none; cursor: pointer;">Laravel Fortify</a>
-                <a href="https://github.com/laravel/sanctum" class="badge" target="_blank"
-                    style="text-decoration: none; cursor: pointer;">Laravel Sanctum</a>
-                <a href="https://github.com/spatie/laravel-permission" class="badge" target="_blank"
-                    style="text-decoration: none; cursor: pointer;">Spatie Laravel Permission</a>
-                <a href="https://github.com/spatie/laravel-passkeys" class="badge" target="_blank"
-                    style="text-decoration: none; cursor: pointer;">Spatie Laravel Passkeys</a>
+            <p class="section-description">AuthKit stands on the shoulders of giants:</p>
+            <div class="built-with-grid">
+                <a href="https://github.com/laravel/fortify" class="badge built-link" target="_blank">Laravel
+                    Fortify</a>
+                <a href="https://github.com/laravel/sanctum" class="badge built-link" target="_blank">Laravel
+                    Sanctum</a>
+                <a href="https://github.com/spatie/laravel-permission" class="badge built-link" target="_blank">Spatie
+                    Laravel Permission</a>
+                <a href="https://github.com/spatie/laravel-passkeys" class="badge built-link" target="_blank">Spatie
+                    Laravel Passkeys</a>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>BSPDX AuthKit - MIT License - Built with ❤️ for the Laravel Community</p>
-        <p style="margin-top: 0.5rem; opacity: 0.8;">© {{ date('Y') }} BSPDX. All rights reserved.</p>
+        <p>BSPDX AuthKit - MIT License - Designed for the Laravel community.</p>
+        <p class="footer-meta">© {{ date('Y') }} BSPDX. All rights reserved.</p>
     </footer>
 </body>
 

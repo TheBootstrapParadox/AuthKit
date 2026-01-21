@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use BSPDX\AuthKit\Http\Controllers\TwoFactorAuthController;
 use BSPDX\AuthKit\Http\Controllers\PasskeyAuthController;
+use BSPDX\AuthKit\Http\Controllers\ProfileController;
+use BSPDX\AuthKit\Http\Controllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +22,26 @@ use BSPDX\AuthKit\Http\Controllers\PasskeyAuthController;
 Route::get('/', function () {
     return view('splash');
 })->name('home');
+
+// Profile Routes
+Route::middleware(config('authkit.profile.middleware', ['web', 'auth']))->group(function () {
+    Route::get(config('authkit.profile.path', '/profile'), [ProfileController::class, 'show'])
+        ->name('authkit.profile.show');
+
+    Route::put(config('authkit.profile.path', '/profile') . '/auth-preferences', [ProfileController::class, 'updateAuthPreferences'])
+        ->name('authkit.profile.auth-preferences.update');
+});
+
+// Passwordless Login Routes (guest)
+Route::middleware(['web', 'guest'])->group(function () {
+    // Get available auth methods for an email
+    Route::post('/login/methods', [LoginController::class, 'getAuthMethods'])
+        ->name('authkit.login.methods');
+
+    // TOTP-only login (when password not required)
+    Route::post('/login/totp', [LoginController::class, 'authenticateWithTotp'])
+        ->name('authkit.login.totp');
+});
 
 // Two-Factor Authentication Routes
 Route::middleware(['web', 'auth'])->group(function () {

@@ -54,6 +54,12 @@ return [
 
         // Enable account deletion
         'account_deletion' => false,
+
+        // Allow users to configure passwordless login options
+        'passwordless_login' => true,
+
+        // Show roles and permissions on profile page (requires Spatie Laravel Permission)
+        'show_permissions' => true,
     ],
 
     /*
@@ -228,6 +234,29 @@ return [
 
         // Require password confirmation for sensitive operations (in minutes)
         'password_timeout' => 10800, // 3 hours
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Profile Page Settings
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for the user profile page.
+    |
+    */
+
+    'profile' => [
+        // The URI path where the profile page will be accessible
+        'path' => '/profile',
+
+        // Middleware to apply to profile routes
+        'middleware' => ['web', 'auth'],
+
+        // Require password confirmation before sensitive operations
+        'require_password_confirm' => true,
+
+        // Layout view to extend (set to null to use component-only mode)
+        'layout' => 'layouts.app',
     ],
 
 ];

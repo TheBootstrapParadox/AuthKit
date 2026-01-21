@@ -88,4 +88,69 @@ trait HasAuthKit
     {
         return $this->isSuperAdmin();
     }
+
+    /**
+     * Check if user can use passwordless login.
+     */
+    public function canUsePasswordlessLogin(): bool
+    {
+        return ($this->allow_passkey_login && $this->hasPasskeysRegistered()) ||
+               ($this->allow_totp_login && $this->hasTwoFactorEnabled());
+    }
+
+    /**
+     * Get available authentication methods for this user.
+     */
+    public function getAvailableAuthMethods(): array
+    {
+        $methods = [];
+
+        if ($this->require_password) {
+            $methods[] = 'password';
+        }
+
+        if ($this->allow_passkey_login && $this->hasPasskeysRegistered()) {
+            $methods[] = 'passkey';
+        }
+
+        if ($this->allow_totp_login && $this->hasTwoFactorEnabled()) {
+            $methods[] = 'totp';
+        }
+
+        return $methods;
+    }
+
+    /**
+     * Validate that at least one auth method is enabled.
+     */
+    public function hasValidAuthConfiguration(): bool
+    {
+        return $this->require_password ||
+               ($this->allow_passkey_login && $this->hasPasskeysRegistered()) ||
+               ($this->allow_totp_login && $this->hasTwoFactorEnabled());
+    }
+
+    /**
+     * Get the auth preference fillable attributes.
+     */
+    public static function getAuthPreferenceFillable(): array
+    {
+        return [
+            'allow_passkey_login',
+            'allow_totp_login',
+            'require_password',
+        ];
+    }
+
+    /**
+     * Get the auth preference cast attributes.
+     */
+    public static function getAuthPreferenceCasts(): array
+    {
+        return [
+            'allow_passkey_login' => 'boolean',
+            'allow_totp_login' => 'boolean',
+            'require_password' => 'boolean',
+        ];
+    }
 }

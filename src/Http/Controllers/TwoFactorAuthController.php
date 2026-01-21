@@ -106,8 +106,11 @@ class TwoFactorAuthController
      */
     public function recoveryCodes(Request $request): JsonResponse
     {
+        $codes = $this->getRecoveryCodes($request->user());
+
         return response()->json([
-            'recovery_codes' => $this->getRecoveryCodes($request->user()),
+            'codes' => $codes,
+            'recovery_codes' => $codes, // Backwards compatibility
         ]);
     }
 
@@ -123,7 +126,10 @@ class TwoFactorAuthController
         $codes = $this->getRecoveryCodes($request->user());
 
         if ($request->wantsJson()) {
-            return response()->json(['recovery_codes' => $codes]);
+            return response()->json([
+                'codes' => $codes,
+                'recovery_codes' => $codes, // Backwards compatibility
+            ]);
         }
 
         return redirect()->back()->with([

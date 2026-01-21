@@ -4,26 +4,37 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/bspdx/authkit.svg?style=flat-square)](https://packagist.org/packages/bspdx/authkit)
 [![License](https://img.shields.io/packagist/l/bspdx/authkit.svg?style=flat-square)](https://packagist.org/packages/bspdx/authkit)
 
-A comprehensive, production-ready authentication package for Laravel 12. AuthKin combines the power of Laravel Fortify, Sanctum, Spatie Laravel Permission, and Spatie Laravel Passkeys to provide a full-featured auth system with:
+A comprehensive, production-ready authentication package for Laravel 12 with an **API-first architecture**. AuthKit combines the power of Laravel Fortify, Sanctum, Spatie Laravel Permission, and Spatie Laravel Passkeys to provide a full-featured auth system with:
 
 -   🔐 **Standard Authentication** - Powered by Laravel Fortify
--   👥 **Role-Based Access Control (RBAC)** - Using Spatie Laravel Permission
+-   👥 **Role-Based Access Control (RBAC)** - Clean service layer API
 -   📱 **TOTP Two-Factor Authentication** - Google Authenticator, Authy, etc.
 -   🔑 **Passkey Authentication** - Modern WebAuthn/FIDO2 login
 -   🛡️ **Passkey as 2FA** - Use passkeys as a second factor
--   🎨 **Framework-Agnostic Blade Components** - Beautiful, customizable UI partials
--   🌐 **API Support** - Full Sanctum integration for API authentication
+-   🎨 **Optional Blade UI Components** - Pre-built views for Laravel projects
+-   🌐 **API-First Design** - Works with React, Vue, mobile apps, or any frontend
 -   🏢 **Multi-Tenancy Ready** - Optional tenant scoping
+
+## Frontend Flexibility
+
+**AuthKit works with any frontend framework:**
+- ✅ **React, Vue, Angular, Svelte** - Use the JSON API endpoints
+- ✅ **Mobile Apps** - iOS, Android, React Native, Flutter
+- ✅ **Laravel Blade** - Optional pre-built UI components included
+- ✅ **Inertia.js** - Perfect for hybrid approaches
+
+All controllers return JSON when requested, making AuthKit truly framework-agnostic at the API level.
 
 ## Table of Contents
 
+-   [Frontend Flexibility](#frontend-flexibility)
 -   [Requirements](#requirements)
 -   [Installation](#installation)
 -   [Configuration](#configuration)
 -   [Usage](#usage)
     -   [User Model Setup](#user-model-setup)
     -   [Service Layer](#service-layer-new-in-v030)
-    -   [Blade Components](#blade-components)
+    -   [Blade Components (Optional)](#blade-components-optional)
     -   [Routes](#routes)
     -   [Middleware](#middleware)
     -   [API Usage](#api-usage)
@@ -390,9 +401,15 @@ class PostController extends Controller
 
 ### API Usage
 
+AuthKit is designed with an **API-first architecture**, making it perfect for:
+- Single Page Applications (React, Vue, Angular, Svelte)
+- Mobile applications (iOS, Android, React Native, Flutter)
+- Headless/decoupled architectures
+- Microservices
+
 #### Authentication
 
-Use Sanctum for API authentication:
+Use Sanctum for API authentication. All AuthKit controllers automatically return JSON when the request has `Accept: application/json` header or uses `wantsJson()`:
 
 ```php
 // Login endpoint (you need to create this)
@@ -446,7 +463,7 @@ curl -X POST http://localhost/api/user/two-factor-authentication \
 
 ## Architecture
 
-AuthKit v0.3.0+ uses a clean service layer architecture to isolate external dependencies.
+AuthKit v0.3.0+ uses an **API-first, service layer architecture** to isolate external dependencies and provide maximum flexibility for any frontend framework.
 
 ### Service Layer
 
@@ -479,10 +496,12 @@ All type hints use these AuthKit models, providing a consistent `BSPDX\AuthKit` 
 
 ### Benefits
 
+- **API-First** - Works with any frontend framework (React, Vue, mobile apps, etc.)
 - **Testability** - Mock service interfaces in tests instead of facades
 - **Maintainability** - All external dependencies isolated in service layer
 - **Flexibility** - Easy to swap implementations or add caching/logging
 - **Clean API** - No third-party classes in your controllers
+- **Optional UI** - Blade components included but completely optional
 
 ## HTTPS Setup
 

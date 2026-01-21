@@ -1,4 +1,6 @@
 <div class="authkit-form-container">
+    @include('authkit::components.authkit-styles')
+
     <div class="authkit-form">
         <div class="authkit-form-group">
             <label for="passkey-name" class="authkit-label">Passkey Name</label>
@@ -9,7 +11,7 @@
                 placeholder="e.g., My iPhone, Work Laptop"
                 value="My Passkey"
             >
-            <p style="font-size: 0.875rem; color: var(--authkit-text-muted); margin-top: 0.5rem;">
+            <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">
                 Give this passkey a recognizable name.
             </p>
         </div>
@@ -29,9 +31,8 @@
         const name = nameInput.value.trim() || 'My Passkey';
 
         try {
-            statusDiv.innerHTML = '<p style="color: var(--authkit-primary);">Preparing passkey registration...</p>';
+            statusDiv.innerHTML = '<p style="color: var(--primary);">Preparing passkey registration...</p>';
 
-            // Get registration options from server
             const optionsResponse = await fetch('{{ $registerOptionsUrl }}', {
                 method: 'POST',
                 headers: {
@@ -46,22 +47,19 @@
 
             const options = await optionsResponse.json();
 
-            // Prepare options for WebAuthn
             options.challenge = Uint8Array.from(atob(options.challenge.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
             options.user.id = Uint8Array.from(atob(options.user.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
 
-            statusDiv.innerHTML = '<p style="color: var(--authkit-primary);">Follow your browser prompt...</p>';
+            statusDiv.innerHTML = '<p style="color: var(--primary);">Follow your browser prompt...</p>';
 
-            // Create credential
             const credential = await navigator.credentials.create({ publicKey: options });
 
             if (!credential) {
                 throw new Error('Passkey registration was cancelled');
             }
 
-            statusDiv.innerHTML = '<p style="color: var(--authkit-primary);">Saving passkey...</p>';
+            statusDiv.innerHTML = '<p style="color: var(--primary);">Saving passkey...</p>';
 
-            // Send credential to server
             const response = await fetch('{{ $registerUrl }}', {
                 method: 'POST',
                 headers: {
@@ -87,14 +85,13 @@
                 throw new Error(error.message || 'Failed to register passkey');
             }
 
-            statusDiv.innerHTML = '<p style="color: #10b981;">✓ Passkey registered successfully!</p>';
+            statusDiv.innerHTML = '<p style="color: var(--secondary);">✓ Passkey registered successfully!</p>';
 
-            // Reload page after a short delay
             setTimeout(() => window.location.reload(), 1500);
 
         } catch (error) {
             console.error('Passkey registration error:', error);
-            statusDiv.innerHTML = `<p style="color: var(--authkit-danger);">Error: ${error.message}</p>`;
+            statusDiv.innerHTML = `<p style="color: var(--secondary);">Error: ${error.message}</p>`;
         }
     }
 </script>

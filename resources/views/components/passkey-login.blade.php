@@ -1,6 +1,8 @@
 <div class="authkit-form-container">
+    @include('authkit::components.authkit-styles')
+
     <div class="authkit-form">
-        <h2 style="margin-bottom: 1.5rem; text-align: center; color: var(--authkit-text);">
+        <h2 style="margin-bottom: 1.5rem; text-align: center; color: var(--text-primary);">
             Sign in with Passkey
         </h2>
 
@@ -18,12 +20,11 @@
 
 <script>
     async function loginWithPasskey() {
-      const statusDiv = document.getElementById('{{ $statusId }}');
+        const statusDiv = document.getElementById('{{ $statusId }}');
 
         try {
-            statusDiv.innerHTML = '<p style="color: var(--authkit-primary);">Preparing passkey authentication...</p>';
+            statusDiv.innerHTML = '<p style="color: var(--primary);">Preparing passkey authentication...</p>';
 
-            // Get authentication options from server
             const optionsResponse = await fetch('{{ $loginOptionsUrl }}', {
                 method: 'POST',
                 headers: {
@@ -38,7 +39,6 @@
 
             const options = await optionsResponse.json();
 
-            // Prepare options for WebAuthn
             options.challenge = Uint8Array.from(atob(options.challenge.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
 
             if (options.allowCredentials) {
@@ -48,18 +48,16 @@
                 }));
             }
 
-            statusDiv.innerHTML = '<p style="color: var(--authkit-primary);">Follow your browser prompt...</p>';
+            statusDiv.innerHTML = '<p style="color: var(--primary);">Follow your browser prompt...</p>';
 
-            // Get credential
             const credential = await navigator.credentials.get({ publicKey: options });
 
             if (!credential) {
                 throw new Error('Passkey authentication was cancelled');
             }
 
-            statusDiv.innerHTML = '<p style="color: var(--authkit-primary);">Verifying...</p>';
+            statusDiv.innerHTML = '<p style="color: var(--primary);">Verifying...</p>';
 
-            // Send credential to server
             const response = await fetch('{{ $authenticateUrl }}', {
                 method: 'POST',
                 headers: {
@@ -87,18 +85,16 @@
                 throw new Error(result.message || 'Authentication failed');
             }
 
-            statusDiv.innerHTML = '<p style="color: #10b981;">✓ Authentication successful! Redirecting...</p>';
+            statusDiv.innerHTML = '<p style="color: var(--secondary);">✓ Authentication successful! Redirecting...</p>';
 
-            // Redirect to dashboard
             window.location.href = result.redirect || '{{ config('authkit.redirects.login', '/dashboard') }}';
 
         } catch (error) {
             console.error('Passkey authentication error:', error);
-            statusDiv.innerHTML = `<p style="color: var(--authkit-danger);">Error: ${error.message}</p>`;
+            statusDiv.innerHTML = `<p style="color: var(--secondary);">Error: ${error.message}</p>`;
         }
     }
 
-    // Auto-trigger on page load
     document.addEventListener('DOMContentLoaded', () => {
         // Optionally auto-trigger passkey login
         // loginWithPasskey();

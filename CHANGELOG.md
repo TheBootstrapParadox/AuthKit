@@ -9,7 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.4.0]
+## [0.5.0] 2026-01-21
+
+#### Added
+
+**Passwordless Authentication**
+- New `LoginController` to handle passwordless login methods and TOTP authentication
+- New passwordless login routes and endpoints
+- Support for multiple authentication methods per user
+
+**User Profile Management**
+- New `ProfileController` for user profile display and authentication preference updates
+- New profile routes and endpoints
+- New methods in `HasAuthKit` trait for managing authentication preferences and available methods
+
+**Console Commands**
+- New Artisan commands for role management
+- New Artisan commands for permission management
+
+**Component Samples**
+- Added component samples for common authentication UI patterns
+
+#### Changed
+
+- Enhanced splash page with improved styling and content
+- Updated `TwoFactorAuthController` to maintain backward compatibility for recovery codes
+
+---
+
+## [Unreleased] -  0.4.0
 
 #### Changed
 

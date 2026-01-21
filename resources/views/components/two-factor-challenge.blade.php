@@ -1,4 +1,5 @@
 <div class="authkit-form-container">
+    @include('authkit::components.authkit-styles')
     <form method="POST" action="{{ $action }}" class="authkit-form" id="two-factor-form">
         @csrf
 
