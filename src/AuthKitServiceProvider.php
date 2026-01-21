@@ -65,6 +65,17 @@ class AuthKitServiceProvider extends ServiceProvider {
      * Bootstrap any application services.
      */
     public function boot(): void {
+        // Register console commands
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \BSPDX\AuthKit\Console\Commands\MakePermissionCommand::class,
+                \BSPDX\AuthKit\Console\Commands\MakeRoleCommand::class,
+                \BSPDX\AuthKit\Console\Commands\MakeUserCommand::class,
+                \BSPDX\AuthKit\Console\Commands\AssignRoleCommand::class,
+                \BSPDX\AuthKit\Console\Commands\AssignPermissionCommand::class,
+            ]);
+        }
+
         // Load package routes if enabled
         if (config('authkit.load_routes', false)) {
             if (
