@@ -8,7 +8,7 @@
             Sign in with Passkey
         </button>
 
-        <div id="passkey-status" style="margin-top: 1rem; font-size: 0.875rem; text-align: center;"></div>
+        <div id="{{ $statusId }}" style="margin-top: 1rem; font-size: 0.875rem; text-align: center;"></div>
 
         <div class="authkit-links" style="justify-content: center;">
             <a href="{{ route('login') }}" class="authkit-link">Use password instead</a>
@@ -18,7 +18,7 @@
 
 <script>
     async function loginWithPasskey() {
-        const statusDiv = document.getElementById('passkey-status');
+      const statusDiv = document.getElementById('{{ $statusId }}');
 
         try {
             statusDiv.innerHTML = '<p style="color: var(--authkit-primary);">Preparing passkey authentication...</p>';

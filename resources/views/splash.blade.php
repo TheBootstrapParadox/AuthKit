@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>BSPDX AuthKit - Complete Laravel Authentication</title>
     <style>
         * {
@@ -267,6 +268,42 @@
             border-radius: 0.25rem;
             font-size: 0.875rem;
         }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .demo-card {
+            background: #fefefe;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            min-height: 100%;
+        }
+
+        .demo-card h3 {
+            margin-bottom: 0.25rem;
+            color: #111827;
+            font-size: 1.25rem;
+        }
+
+        .demo-card code {
+            background: #e0e7ff;
+            padding: 0.15rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.85rem;
+        }
+
+        .demo-note {
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
     </style>
 </head>
 
@@ -476,26 +513,65 @@
             <h2>Blade Components</h2>
             <p style="margin-bottom: 1rem;">Drop-in, framework-agnostic Blade components:</p>
 
-            <h3 style="font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: #374151;">Login Form</h3>
-            <div class="code-block">&lt;x-authkit::login-form
-                :show-passkey-option="true"
-                :show-remember-me="true"
-                :show-register-link="true"
-                /&gt;</div>
+                <h3 style="font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: #374151;">Login Form</h3>
+                <div class="code-block">&lt;x-authkit-login-form
+                    :show-passkey-option="true"
+                    :show-remember-me="true"
+                    :show-register-link="true"
+                    /&gt;</div>
 
-            <h3 style="font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: #374151;">Register Form</h3>
-            <div class="code-block">&lt;x-authkit::register-form
-                :show-login-link="true"
-                /&gt;</div>
+                <h3 style="font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: #374151;">Register Form</h3>
+                <div class="code-block">&lt;x-authkit-register-form
+                    :show-login-link="true"
+                    /&gt;</div>
 
-            <h3 style="font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: #374151;">Two-Factor Challenge</h3>
-            <div class="code-block">&lt;x-authkit::two-factor-challenge
-                :show-recovery-code-option="true"
-                /&gt;</div>
+                <h3 style="font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: #374151;">Two-Factor Challenge</h3>
+                <div class="code-block">&lt;x-authkit-two-factor-challenge
+                    :show-recovery-code-option="true"
+                    /&gt;</div>
 
-            <h3 style="font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: #374151;">Passkey Components</h3>
-            <div class="code-block">&lt;x-authkit::passkey-register /&gt;
-                &lt;x-authkit::passkey-login /&gt;</div>
+                <h3 style="font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: #374151;">Passkey Components</h3>
+                <div class="code-block">&lt;x-authkit-passkey-register /&gt;
+                    &lt;x-authkit-passkey-login /&gt;</div>
+        </div>
+
+        <div class="section">
+            <h2>Live Component Preview</h2>
+            <p style="margin-bottom: 1rem;">Interact with the same Blade components right here—seed the demo data, log
+                in, or
+                keep clicking to explore.</p>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3>Login Form</h3>
+                    <p class="demo-note">Use <code>superadmin@example.com</code> or <code>admin@example.com</code> with
+                        <code>password</code> after running <code>php artisan db:seed --class=AuthKitSeeder</code>.
+                    </p>
+                    <x-authkit-login-form :show-passkey-option="true" :show-remember-me="true" :show-register-link="false"
+                        :show-forgot-password="true" />
+                </div>
+                <div class="demo-card">
+                    <h3>Register Form</h3>
+                    <p class="demo-note">Adjust <code>requiredFields</code> in <code>config/authkit.php</code>—this card
+                        mirrors
+                        those defaults.</p>
+                    <x-authkit-register-form :show-login-link="true" />
+                </div>
+                <div class="demo-card">
+                    <h3>Two-Factor Challenge</h3>
+                    <p class="demo-note">Enter a TOTP code or recovery token after enabling 2FA for any seeded account.
+                    </p>
+                    <x-authkit-two-factor-challenge :show-recovery-code-option="true" />
+                </div>
+                <div class="demo-card">
+                    <h3>Passkey Flows</h3>
+                    <p class="demo-note">Passkeys require HTTPS; the buttons invoke the <code>passkeys.*</code> routes.
+                    </p>
+                    <div style="display: grid; gap: 1rem;">
+                        <x-authkit-passkey-register status-id="passkey-register-status-demo" />
+                        <x-authkit-passkey-login status-id="passkey-login-status-demo" />
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Quick Start -->

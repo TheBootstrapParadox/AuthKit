@@ -18,14 +18,14 @@
             Register Passkey
         </button>
 
-        <div id="passkey-status" style="margin-top: 1rem; font-size: 0.875rem;"></div>
+        <div id="{{ $statusId }}" style="margin-top: 1rem; font-size: 0.875rem;"></div>
     </div>
 </div>
 
 <script>
     async function registerPasskey() {
         const nameInput = document.getElementById('passkey-name');
-        const statusDiv = document.getElementById('passkey-status');
+        const statusDiv = document.getElementById('{{ $statusId }}');
         const name = nameInput.value.trim() || 'My Passkey';
 
         try {
