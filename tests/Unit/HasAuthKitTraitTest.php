@@ -5,12 +5,9 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HasAuthKitTraitTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp();
