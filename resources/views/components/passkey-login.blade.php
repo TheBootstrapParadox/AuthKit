@@ -38,11 +38,13 @@
             }
 
             const options = await optionsResponse.json();
+            const optionsJson = JSON.stringify(options);
 
-            options.challenge = Uint8Array.from(atob(options.challenge.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+            const publicKeyOptions = structuredClone(options);
+            publicKeyOptions.challenge = Uint8Array.from(atob(publicKeyOptions.challenge.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
 
-            if (options.allowCredentials) {
-                options.allowCredentials = options.allowCredentials.map(cred => ({
+            if (publicKeyOptions.allowCredentials) {
+                publicKeyOptions.allowCredentials = publicKeyOptions.allowCredentials.map(cred => ({
                     ...cred,
                     id: Uint8Array.from(atob(cred.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0)),
                 }));
@@ -50,7 +52,7 @@
 
             statusDiv.innerHTML = '<p style="color: var(--primary);">Follow your browser prompt...</p>';
 
-            const credential = await navigator.credentials.get({ publicKey: options });
+            const credential = await navigator.credentials.get({ publicKey: publicKeyOptions });
 
             if (!credential) {
                 throw new Error('Passkey authentication was cancelled');
@@ -65,6 +67,7 @@
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                 },
                 body: JSON.stringify({
+                    options: optionsJson,
                     credential: {
                         id: credential.id,
                         rawId: btoa(String.fromCharCode(...new Uint8Array(credential.rawId))),

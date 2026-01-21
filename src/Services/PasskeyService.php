@@ -4,52 +4,76 @@ namespace BSPDX\AuthKit\Services;
 
 use BSPDX\AuthKit\Services\Contracts\PasskeyServiceInterface;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Spatie\Passkeys\Facades\Passkey;
+use Spatie\LaravelPasskeys\Actions\FindPasskeyToAuthenticateAction;
+use Spatie\LaravelPasskeys\Actions\GeneratePasskeyAuthenticationOptionsAction;
+use Spatie\LaravelPasskeys\Actions\GeneratePasskeyRegisterOptionsAction;
+use Spatie\LaravelPasskeys\Actions\StorePasskeyAction;
+use Spatie\LaravelPasskeys\Models\Concerns\HasPasskeys;
+use Spatie\LaravelPasskeys\Models\Passkey;
 
 class PasskeyService implements PasskeyServiceInterface
 {
+    public function __construct(
+        protected GeneratePasskeyRegisterOptionsAction $generateRegisterOptionsAction,
+        protected StorePasskeyAction $storePasskeyAction,
+        protected GeneratePasskeyAuthenticationOptionsAction $generateAuthenticationOptionsAction,
+        protected FindPasskeyToAuthenticateAction $findPasskeyToAuthenticateAction,
+    ) {}
+
     /**
      * Generate passkey registration options for a user.
-     *
-     * @param Authenticatable $user
-     * @return array
      */
-    public function registerOptions(Authenticatable $user): array
+    public function generateRegisterOptions(Authenticatable $user): string
     {
-        return Passkey::registerOptions($user);
+        /** @var HasPasskeys $user */
+        return $this->generateRegisterOptionsAction->execute($user, asJson: true);
     }
 
     /**
-     * Register a new passkey for the user.
-     *
-     * @param Authenticatable $user
-     * @param array $credential
-     * @param string $name
-     * @return void
+     * Store a new passkey for the user.
      */
-    public function register(Authenticatable $user, array $credential, string $name): void
-    {
-        Passkey::register($user, $credential, $name);
+    public function storePasskey(
+        Authenticatable $user,
+        string $passkeyJson,
+        string $optionsJson,
+        array $additionalProperties = []
+    ): Passkey {
+        /** @var HasPasskeys $user */
+        $hostname = parse_url(config('app.url'), PHP_URL_HOST);
+
+        return $this->storePasskeyAction->execute(
+            authenticatable: $user,
+            passkeyJson: $passkeyJson,
+            passkeyOptionsJson: $optionsJson,
+            hostName: $hostname,
+            additionalProperties: $additionalProperties,
+        );
     }
 
     /**
      * Generate passkey authentication options.
-     *
-     * @return array
      */
-    public function authenticationOptions(): array
+    public function generateAuthenticationOptions(): string
     {
-        return Passkey::authenticationOptions();
+        return $this->generateAuthenticationOptionsAction->execute();
     }
 
     /**
-     * Authenticate a user using a passkey credential.
-     *
-     * @param array $credential
-     * @return Authenticatable
+     * Find and validate a passkey for authentication.
      */
-    public function authenticate(array $credential): Authenticatable
+    public function findPasskeyToAuthenticate(string $credentialJson, string $optionsJson): ?Passkey
     {
-        return Passkey::authenticate($credential);
+        return $this->findPasskeyToAuthenticateAction->execute(
+            publicKeyCredentialJson: $credentialJson,
+            passkeyOptionsJson: $optionsJson,
+        );
+    }
+
+    /**
+     * Get the authenticatable user from a passkey.
+     */
+    public function getAuthenticatableFromPasskey(Passkey $passkey): Authenticatable
+    {
+        return $passkey->authenticatable;
     }
 }

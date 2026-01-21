@@ -46,13 +46,15 @@
             }
 
             const options = await optionsResponse.json();
+            const optionsJson = JSON.stringify(options);
 
-            options.challenge = Uint8Array.from(atob(options.challenge.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
-            options.user.id = Uint8Array.from(atob(options.user.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+            const publicKeyOptions = structuredClone(options);
+            publicKeyOptions.challenge = Uint8Array.from(atob(publicKeyOptions.challenge.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+            publicKeyOptions.user.id = Uint8Array.from(atob(publicKeyOptions.user.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
 
             statusDiv.innerHTML = '<p style="color: var(--primary);">Follow your browser prompt...</p>';
 
-            const credential = await navigator.credentials.create({ publicKey: options });
+            const credential = await navigator.credentials.create({ publicKey: publicKeyOptions });
 
             if (!credential) {
                 throw new Error('Passkey registration was cancelled');
@@ -68,6 +70,7 @@
                 },
                 body: JSON.stringify({
                     name: name,
+                    options: optionsJson,
                     credential: {
                         id: credential.id,
                         rawId: btoa(String.fromCharCode(...new Uint8Array(credential.rawId))),

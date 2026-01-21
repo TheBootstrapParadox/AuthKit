@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.3] 2026-01-21
+
+#### Changed
+
+- Hardened passkey flows: clone/transform WebAuthn options client-side, return the exact options JSON with credentials, and validate against stored options during registration/authentication (passkey Blade components, passkey controller/service contract and implementation).
+
+---
+
 ## [0.5.2] 2026-01-21
 
 #### Added

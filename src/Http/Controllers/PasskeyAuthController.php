@@ -6,13 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Session;
 use BSPDX\AuthKit\Services\Contracts\PasskeyServiceInterface;
 
 class PasskeyAuthController
 {
-    /**
-     * Create a new controller instance.
-     */
+    protected const SESSION_REGISTER_OPTIONS = 'passkey-register-options';
+    protected const SESSION_AUTH_OPTIONS = 'passkey-authentication-options';
+
     public function __construct(
         private PasskeyServiceInterface $passkeyService
     ) {}
@@ -33,9 +34,12 @@ class PasskeyAuthController
      */
     public function registerOptions(Request $request): JsonResponse
     {
-        $options = $this->passkeyService->registerOptions($request->user());
+        $optionsJson = $this->passkeyService->generateRegisterOptions($request->user());
 
-        return response()->json($options);
+        // Store options in session for validation during registration
+        Session::flash(self::SESSION_REGISTER_OPTIONS, $optionsJson);
+
+        return response()->json(json_decode($optionsJson, true));
     }
 
     /**
@@ -45,11 +49,26 @@ class PasskeyAuthController
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'credential' => ['required', 'array'],
+            'credential' => ['required'],
+            'options' => ['required'],
         ]);
 
+        // Get credential and options as JSON strings
+        $credentialJson = is_string($validated['credential'])
+            ? $validated['credential']
+            : json_encode($validated['credential']);
+
+        $optionsJson = is_string($validated['options'])
+            ? $validated['options']
+            : json_encode($validated['options']);
+
         try {
-            $this->passkeyService->register($request->user(), $validated['credential'], $validated['name']);
+            $this->passkeyService->storePasskey(
+                user: $request->user(),
+                passkeyJson: $credentialJson,
+                optionsJson: $optionsJson,
+                additionalProperties: ['name' => $validated['name']],
+            );
 
             if ($request->wantsJson()) {
                 return response()->json([
@@ -101,9 +120,10 @@ class PasskeyAuthController
      */
     public function loginOptions(Request $request): JsonResponse
     {
-        $options = $this->passkeyService->authenticationOptions();
+        // This also stores options in session via Spatie's action
+        $optionsJson = $this->passkeyService->generateAuthenticationOptions();
 
-        return response()->json($options);
+        return response()->json(json_decode($optionsJson, true));
     }
 
     /**
@@ -112,11 +132,27 @@ class PasskeyAuthController
     public function authenticate(Request $request): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
-            'credential' => ['required', 'array'],
+            'credential' => ['required'],
+            'options' => ['required'],
         ]);
 
+        // Get credential and options as JSON strings
+        $credentialJson = is_string($validated['credential'])
+            ? $validated['credential']
+            : json_encode($validated['credential']);
+
+        $optionsJson = is_string($validated['options'])
+            ? $validated['options']
+            : json_encode($validated['options']);
+
         try {
-            $user = $this->passkeyService->authenticate($validated['credential']);
+            $passkey = $this->passkeyService->findPasskeyToAuthenticate($credentialJson, $optionsJson);
+
+            if (!$passkey) {
+                throw new \Exception('Invalid passkey credential.');
+            }
+
+            $user = $this->passkeyService->getAuthenticatableFromPasskey($passkey);
 
             auth()->login($user, remember: true);
 
