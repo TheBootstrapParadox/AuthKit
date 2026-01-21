@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use BSPDX\AuthKit\Support\PasskeyConfig;
 
 return new class extends Migration
 {
@@ -16,6 +17,11 @@ return new class extends Migration
         $columnNames = config('permission.column_names');
         $pivotRole = $columnNames['role_pivot_key'] ?? 'role_id';
         $pivotPermission = $columnNames['permission_pivot_key'] ?? 'permission_id';
+
+        // Detect if the authenticatable model uses UUIDs by checking for the HasUuids trait
+        $authenticatableClass = PasskeyConfig::getAuthenticatableModel();
+        $authenticatable = new $authenticatableClass;
+        $useUuids = method_exists($authenticatable, 'uniqueIds');
 
         throw_if(empty($tableNames), Exception::class, 'Error: config/permission.php not loaded. Run [php artisan config:clear] and try again.');
         throw_if($teams && empty($columnNames['team_foreign_key'] ?? null), Exception::class, 'Error: team_foreign_key on config/permission.php not loaded. Run [php artisan config:clear] and try again.');
@@ -47,11 +53,15 @@ return new class extends Migration
             }
         });
 
-        Schema::create($tableNames['model_has_permissions'], static function (Blueprint $table) use ($tableNames, $columnNames, $pivotPermission, $teams) {
+        Schema::create($tableNames['model_has_permissions'], static function (Blueprint $table) use ($tableNames, $columnNames, $pivotPermission, $teams, $useUuids) {
             $table->unsignedBigInteger($pivotPermission);
 
             $table->string('model_type');
-            $table->unsignedBigInteger($columnNames['model_morph_key']);
+            if ($useUuids) {
+                $table->uuid($columnNames['model_morph_key']);
+            } else {
+                $table->unsignedBigInteger($columnNames['model_morph_key']);
+            }
             $table->index([$columnNames['model_morph_key'], 'model_type'], 'model_has_permissions_model_id_model_type_index');
 
             $table->foreign($pivotPermission)
@@ -71,11 +81,15 @@ return new class extends Migration
 
         });
 
-        Schema::create($tableNames['model_has_roles'], static function (Blueprint $table) use ($tableNames, $columnNames, $pivotRole, $teams) {
+        Schema::create($tableNames['model_has_roles'], static function (Blueprint $table) use ($tableNames, $columnNames, $pivotRole, $teams, $useUuids) {
             $table->unsignedBigInteger($pivotRole);
 
             $table->string('model_type');
-            $table->unsignedBigInteger($columnNames['model_morph_key']);
+            if ($useUuids) {
+                $table->uuid($columnNames['model_morph_key']);
+            } else {
+                $table->unsignedBigInteger($columnNames['model_morph_key']);
+            }
             $table->index([$columnNames['model_morph_key'], 'model_type'], 'model_has_roles_model_id_model_type_index');
 
             $table->foreign($pivotRole)

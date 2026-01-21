@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->text('two_factor_recovery_codes')->nullable()->after('two_factor_secret');
             $table->timestamp('two_factor_confirmed_at')->nullable()->after('two_factor_recovery_codes');
 
-            $table->unsignedBigInteger('tenant_id')->nullable()->after('id');
+            $table->uuid('tenant_id')->nullable()->after('id');
             $table->index('tenant_id');
         });
     }

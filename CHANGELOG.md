@@ -9,13 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [0.4.0]
+
+#### Changed
+
+**Breaking Changes**
+- **BREAKING:** `tenant_id` column is now always a UUID (was `unsignedBigInteger`)
+- **BREAKING:** Permission table migrations now auto-detect User model ID type
+  - If User model uses `HasUuids` trait, `model_morph_key` columns use `uuid`
+  - Otherwise falls back to `unsignedBigInteger`
+  - Detection uses `PasskeyConfig::getAuthenticatableModel()` to find the User model
 
 #### Removed
 
 - Removed `0001_01_01_00000_create_users_table.php` migration (conflicts with existing Laravel apps)
 - Removed `0001_01_01_00001_create_cache_table.php` migration (host app responsibility)
 - Removed `0001_01_01_00002_create_jobs_table.php` migration (host app responsibility)
+
+#### Migration instructions
+
+Review the [Migration Guide](MIGRATING-TO-SUTHKIT-0.4.0md) for help migrating to this new version. 
 
 ---
 
