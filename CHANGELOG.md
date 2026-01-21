@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.2] 2026-01-21
+
+#### Added
+
+- Added `pragmarx/google2fa-laravel` to the package requirements so TOTP flows ship with the core install.
+
+#### Changed
+
+- Updated `resources/views/components/two-factor-challenge.blade.php` to use the shared `authkit-styles` partial for consistent theming and layout.
+- AuthKit now registers the Fortify two-factor challenge view automatically when Fortify is present and no override is bound (see `AuthKitServiceProvider`).
+
+---
+
 ## [0.5.1] 2026-01-21
 
 #### Removed

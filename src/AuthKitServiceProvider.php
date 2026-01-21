@@ -133,5 +133,13 @@ class AuthKitServiceProvider extends ServiceProvider {
             \BSPDX\AuthKit\View\Components\PasskeyRegister::class,
             \BSPDX\AuthKit\View\Components\PasskeyLogin::class,
         ]);
+
+        // Register Fortify two-factor challenge view if Fortify is installed
+        // and the binding hasn't already been set by the application
+        if (class_exists(\Laravel\Fortify\Fortify::class) && !$this->app->bound(\Laravel\Fortify\Contracts\TwoFactorChallengeViewResponse::class)) {
+            \Laravel\Fortify\Fortify::twoFactorChallengeView(function () {
+                return view('authkit::two-factor-challenge');
+            });
+        }
     }
 }
