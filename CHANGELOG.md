@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.1] 2026-01-21
+
+#### Removed
+
+- Removed `App\\` namespace from `autoload-dev` in composer.json (was used for local development only)
+
+---
+
 ## [0.5.0] 2026-01-21
 
 #### Added
