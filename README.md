@@ -1,3 +1,6 @@
+> # 🚨 Important update
+> I just found out someone else made an AuthKit. You already know the one. I'll get around to renaming this soon, don't you worry!
+
 # BSPDX AuthKit
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/bspdx/authkit.svg?style=flat-square)](https://packagist.org/packages/bspdx/authkit)

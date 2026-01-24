@@ -147,33 +147,33 @@
 
     {{-- Existing Passkeys --}}
     @if($passkeys->count() > 0)
-    <div class="authkit-passkey-list">
-        <h3 class="authkit-subsection-title">Your Passkeys</h3>
+        <div class="authkit-passkey-list">
+            <h3 class="authkit-subsection-title">Your Passkeys</h3>
 
-        @foreach($passkeys as $passkey)
-        <div class="authkit-passkey-item">
-            <div class="authkit-passkey-info">
-                <span class="authkit-passkey-name">{{ $passkey->name }}</span>
-                <span class="authkit-passkey-meta">
-                    Added {{ $passkey->created_at->format('M j, Y') }}
-                    @if($passkey->last_used_at)
-                        &middot; Last used {{ $passkey->last_used_at->diffForHumans() }}
-                    @endif
-                </span>
+            @foreach($passkeys as $passkey)
+                <div class="authkit-passkey-item">
+                    <div class="authkit-passkey-info">
+                        <span class="authkit-passkey-name">{{ $passkey->name }}</span>
+                        <span class="authkit-passkey-meta">
+                            Added {{ $passkey->created_at->format('M j, Y') }}
+                            @if($passkey->last_used_at)
+                                &middot; Last used {{ $passkey->last_used_at->diffForHumans() }}
+                            @endif
+                        </span>
+                    </div>
+                    <form method="POST" action="{{ route('passkeys.destroy', $passkey->id) }}" class="authkit-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="authkit-btn authkit-btn-sm authkit-btn-danger"
+                            onclick="return confirm('Are you sure you want to delete this passkey?')">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            @endforeach
             </div>
-            <form method="POST" action="{{ route('passkeys.destroy', $passkey->id) }}" class="authkit-inline">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="authkit-btn authkit-btn-sm authkit-btn-danger"
-                    onclick="return confirm('Are you sure you want to delete this passkey?')">
-                    Delete
-                </button>
-            </form>
-        </div>
-        @endforeach
-    </div>
     @else
-    <p class="authkit-no-passkeys">You haven't registered any passkeys yet.</p>
+        <p class="authkit-no-passkeys">You haven't registered any passkeys yet.</p>
     @endif
 
     {{-- Register New Passkey --}}
@@ -186,9 +186,7 @@
 
         <div class="authkit-form-group">
             <label class="authkit-label" for="passkey-name">Passkey Name</label>
-            <input type="text" id="passkey-name"
-                placeholder="e.g., MacBook Pro, iPhone, YubiKey"
-                class="authkit-input">
+            <input type="text" id="passkey-name" placeholder="e.g., MacBook Pro, iPhone, YubiKey" class="authkit-input">
         </div>
 
         <button type="button" onclick="registerPasskeyFromProfile()" id="register-passkey-btn"
@@ -236,6 +234,9 @@
 
             const options = await optionsResponse.json();
 
+            // Store original options to send back to server for validation
+            const originalOptions = JSON.parse(JSON.stringify(options));
+
             // Prepare options for WebAuthn
             options.challenge = Uint8Array.from(atob(options.challenge.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
             options.user.id = Uint8Array.from(atob(options.user.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
@@ -269,6 +270,7 @@
                         },
                         type: credential.type,
                     },
+                    options: originalOptions,
                 }),
             });
 
