@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.4] 2026-01-24
+
+#### Added
+
+- Added an important notice at the very top of the project's `README.md` informing users about a naming conflict: "I just found out someone else made an AuthKit. I'll get around to renaming this soon, don't you worry!" This ensures visitors see the update immediately and reduces confusion while a rename is planned.
+
+---
+
 ## [0.5.3] 2026-01-21
 
 #### Changed
@@ -89,22 +97,21 @@ Review the [Migration Guide](MIGRATING-TO-SUTHKIT-0.4.0md) for help migrating to
 
 ---
 
-## [0.3.2] - 2026-01-20
+## [0.5.4] 2026-01-24
 
 #### Added
 
-- New `BSPDX\AuthKit\Support\PasskeyConfig` class that wraps Spatie's passkey configuration
-  - Provides `getAuthenticatableModel()`, `getPasskeyModel()`, `getRelyingPartyName()`, `getRelyingPartyId()`, `getRelyingPartyIcon()`, and `getRedirectAfterLogin()` methods
-  - Migrations now use `PasskeyConfig` instead of Spatie's Config directly
+- Added an important notice at the very top of the project's `README.md` informing users about a naming conflict: "I just found out someone else made an AuthKit. I'll get around to renaming this soon, don't you worry!" This ensures visitors see the update immediately and reduces confusion while a rename is planned.
 
 ---
 
-## [0.3.1] - 2026-01-20
+## [0.5.3] 2026-01-21
 
-#### Added
+#### Changed
 
-- New `BSPDX\AuthKit\Contracts\HasPasskeys` interface that extends Spatie's `HasPasskeys`
-  - Allows users to import the passkey interface from AuthKit instead of directly from Spatie
+- Hardened passkey flows: clone/transform WebAuthn options client-side, return the exact options JSON with credentials, and validate against stored options during registration/authentication (passkey Blade components, passkey controller/service contract and implementation).
+
+---
   - Provides abstraction layer for passkey authentication contracts
 
 #### Usage
