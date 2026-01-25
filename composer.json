@@ -2,7 +2,7 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "bspdx/authkit",
     "type": "library",
-    "description": "Complete authentication package for Laravel with Fortify, Passkeys, TOTP 2FA, and RBAC",
+    "description": "DEPRECATED - Use bspdx/keystone instead",
     "keywords": [
         "laravel",
         "authentication",
